@@ -5,6 +5,7 @@ var prompts = ["name", "noun", "adverb", "adjective"]
 var story = "Once upon a time someone called %s ate a %s flavored sandwhich which made them feel all %s inside. It was a %s day"
 onready var PlayerText = $VBoxContainer/HBoxContainer/PlayerText
 onready var DisplayText = $VBoxContainer/DisplayText
+onready var Label = $VBoxContainer/HBoxContainer/Label
 
 func _ready():
 #	var words = ["War", "War", "war", "war"];
@@ -13,6 +14,7 @@ func _ready():
 #	var smallTest = "testing"
 	DisplayText.text = "Welcome to Loony Lips! This is basically the poor man's version of Mad Libs" #story % prompts #fallout % words;
 	check_player_words_length()
+	PlayerText.grab_focus()
 
 
 func _on_PlayerText_text_entered(new_text):
@@ -22,7 +24,10 @@ func _on_PlayerText_text_entered(new_text):
 func _on_TextureButton_pressed():
 	#var words = PlayerText.text
 	#update_DisplayText(words)
-	add_to_player_words()
+	if is_story_done():
+		get_tree().reload_current_scene()
+	else:
+		add_to_player_words()
 
 func update_DisplayText(words):
 	DisplayText.text = words
@@ -39,14 +44,17 @@ func is_story_done():
 	
 func check_player_words_length():
 	if is_story_done():
-		tell_story()
-		pass
-	elif not is_story_done():
+		end_game()
+	else:
 		prompt_player()
-		pass
 
 func tell_story():
 	DisplayText.text = story % player_words
 
 func prompt_player():
 	DisplayText.text += "May I have a "+prompts[player_words.size()]+ " please?"
+
+func end_game():
+	PlayerText.queue_free()
+	Label.text = "Again!"
+	tell_story()
