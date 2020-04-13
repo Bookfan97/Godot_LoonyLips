@@ -30,12 +30,9 @@ func get_from_json(filename):
 	return data
 
 func _on_PlayerText_text_entered(new_text):
-	#update_DisplayText(new_text)
 	add_to_player_words()
 	
 func _on_TextureButton_pressed():
-	#var words = PlayerText.text
-	#update_DisplayText(words)
 	if is_story_done():
 		get_tree().reload_current_scene()
 	else:
